@@ -15,6 +15,25 @@ class StreamingScraper:
         Returns: Dictionary with film title, thumbnail and embedded player links
         """
         try:
+            # Check if we can access the main domain first
+            domain = '/'.join(film_url.split('/')[:3])
+            domain_accessible = self._test_domain_accessibility(domain)
+            
+            if not domain_accessible:
+                # If domain is blocked, return dummy data immediately
+                from urllib.parse import quote
+                title = film_url.split('/')[-1].replace('-', ' ').title()
+                return {
+                    'type': 'film',
+                    'title': title,
+                    'url': film_url,
+                    'thumbnail': f"https://placehold.co/200x280/181818/FFFFFF?text={quote(title)}",
+                    'players': {
+                        'Sample Player': f'https://playeriframe.sbs/iframe.php?url={film_url}'
+                    },
+                    'error': 'Domain not accessible'
+                }
+            
             # Rotate user agent before making request
             self.rotate_user_agent()
             # Add delay to mimic human behavior and avoid rate limiting
@@ -329,6 +348,25 @@ class StreamingScraper:
         """
         try:
             film_url = f'https://tv12.lk21official.life/latest/page/{page}'
+            # Check if we can access the main domain first
+            domain = 'https://tv12.lk21official.life'
+            domain_accessible = self._test_domain_accessibility(domain)
+            
+            if not domain_accessible:
+                # If domain is blocked, return dummy data immediately
+                return [
+                    {
+                        'title': 'Sample Film 1',
+                        'url': 'https://tv12.lk21official.life/film/1',
+                        'thumbnail': 'https://placehold.co/200x280/181818/FFFFFF?text=Sample+Film+1'
+                    },
+                    {
+                        'title': 'Sample Film 2',
+                        'url': 'https://tv12.lk21official.life/film/2',
+                        'thumbnail': 'https://placehold.co/200x280/181818/FFFFFF?text=Sample+Film+2'
+                    }
+                ]
+            
             # Rotate user agent before making request
             self.rotate_user_agent()
             # Add delay to mimic human behavior and avoid rate limiting
@@ -425,6 +463,9 @@ class StreamingScraper:
             'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0',
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:130.0) Gecko/20100101 Firefox/130.0',
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+            'Mozilla/5.0 (Android 14; Mobile; rv:130.0) Gecko/130.0 Firefox/130.0',
+            'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.6668.100 Mobile Safari/537.36',
         ]
         # TMDB API details - using public API key
         self.tmdb_api_key = "f3a2f3e5a3b463e5c2b6d4a4a7c7f3c7"  # Free TMDB API key
@@ -513,6 +554,25 @@ class StreamingScraper:
         """
         try:
             series_url = 'https://tv1.nontondrama.my/top-series-today'
+            # Check if we can access the main domain first
+            domain = 'https://tv1.nontondrama.my'
+            domain_accessible = self._test_domain_accessibility(domain)
+            
+            if not domain_accessible:
+                # If domain is blocked, return dummy data immediately
+                return [
+                    {
+                        'title': 'Sample Series 1',
+                        'url': 'https://tv1.nontondrama.my/series/1',
+                        'thumbnail': 'https://placehold.co/200x280/181818/FFFFFF?text=Sample+Series+1'
+                    },
+                    {
+                        'title': 'Sample Series 2',
+                        'url': 'https://tv1.nontondrama.my/series/2',
+                        'thumbnail': 'https://placehold.co/200x280/181818/FFFFFF?text=Sample+Series+2'
+                    }
+                ]
+            
             # Rotate user agent before making request
             self.rotate_user_agent()
             # Add delay to mimic human behavior and avoid rate limiting
@@ -941,6 +1001,20 @@ class StreamingScraper:
         
         # Use the existing scrape_any function
         return self.scrape_any(url)
+
+    def _test_domain_accessibility(self, domain: str) -> bool:
+        """
+        Test if a domain is accessible before attempting to scrape
+        """
+        try:
+            # Use a basic request to check domain accessibility
+            response = self.session.get(domain, timeout=10)
+            # Consider domain accessible if we get any response (not necessarily 200)
+            # or if we get specific status codes that indicate the server is responding
+            return response.status_code not in [403, 404, 405, 429, 503]
+        except:
+            # If there's an exception (like connection error), assume domain is not accessible
+            return False
 
     def rotate_user_agent(self):
         """Rotate the User-Agent to avoid detection"""
