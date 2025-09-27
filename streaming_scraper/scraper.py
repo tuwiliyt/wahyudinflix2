@@ -38,7 +38,9 @@ class StreamingScraper:
             self.rotate_user_agent()
             # Add delay to mimic human behavior and avoid rate limiting
             import time
-            time.sleep(1)  # 1 second delay between requests
+            import random
+            # Use a random delay between requests to avoid patterns
+            time.sleep(random.uniform(1.0, 3.0))  # Random delay between 1-3 seconds
             # Add timeout and retry logic for external requests
             response = self.session.get(film_url, timeout=15)
             
@@ -46,8 +48,8 @@ class StreamingScraper:
             if '404.html' in response.url or '404' in response.text or response.status_code == 404:
                 # Try with a new session and different user agent
                 self.set_new_session()
-                # Add delay again
-                time.sleep(2)  # Slightly longer delay for retry
+                # Add delay again with more variation
+                time.sleep(random.uniform(2.0, 4.0))  # Random delay between 2-4 seconds
                 response = self.session.get(film_url, timeout=15)
             
             response.raise_for_status()
@@ -1038,15 +1040,18 @@ class StreamingScraper:
             'User-Agent': user_agent,
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Charset': 'utf-8,ISO-8859-1;q=0.7,*;q=0.7',
             'Accept-Encoding': 'gzip, deflate, br',
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1',
             'Sec-Fetch-Dest': 'document',
             'Sec-Fetch-Mode': 'navigate',
             'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1',
             'Cache-Control': 'max-age=0',
             'DNT': '1',  # Do Not Track
             'Referer': 'https://www.google.com/',  # Referer to appear more natural
+            'TE': 'Trailers',
         })
 
 
