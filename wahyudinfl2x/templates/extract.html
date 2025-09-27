@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Extract Content - WAHYUDINFLIX2{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="bg-dark p-5 rounded">
+                <h3 class="text-white mb-4"><i class="bi bi-link-45deg me-2"></i>Extract Content from URL</h3>
+                <form method="POST" action="{{ url_for('extract_url') }}">
+                    <div class="mb-4">
+                        <label for="url" class="form-label text-light">Enter Streaming URL</label>
+                        <input type="url" class="form-control form-control-lg bg-secondary text-white" id="url" name="url" placeholder="https://example.com/movie-or-series-url" required>
+                        <div class="form-text text-muted mt-2">
+                            Enter a valid streaming URL from lk21official.life or nontondrama.my
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-lg me-3">Extract Content</button>
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-light">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5 justify-content-center">
+        <div class="col-md-8">
+            <div class="bg-dark p-4 rounded">
+                <h5 class="text-white mb-4">How to Use</h5>
+                <ol class="text-light">
+                    <li class="mb-2">Copy the URL of a movie or series from lk21official.life or nontondrama.my</li>
+                    <li class="mb-2">Paste the URL in the input field above</li>
+                    <li class="mb-2">Click "Extract Content" to get the details and player links</li>
+                    <li>Watch directly using the available player options</li>
+                </ol>
+                
+                <h6 class="text-white mt-4">Supported Sites:</h6>
+                <ul class="text-muted">
+                    <li>Movies: tv12.lk21official.life</li>
+                    <li>Series: tv1.nontondrama.my</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

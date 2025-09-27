@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ series.title }} - WAHYUDINFLIX2{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            {% if series.thumbnail %}
+            <img src="{{ series.thumbnail }}" class="img-fluid rounded" alt="{{ series.title }}" style="width: 100%; max-height: 400px; object-fit: cover;">
+            {% endif %}
+        </div>
+        <div class="col-md-9">
+            <h1>{{ series.title }}</h1>
+            <div class="mb-3">
+                <span class="badge bg-danger me-2">{{ series.type|title }}</span>
+                <span class="text-muted">{{ series.episodes|length }} Seasons</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        {% for season_name, episodes in series.episodes.items() %}
+        <div class="mb-5">
+            <h3 class="text-white mb-4">{{ season_name }}</h3>
+            <div class="row">
+                {% for episode_name, episode_data in episodes.items() %}
+                <div class="col-md-4 mb-4">
+                    <div class="bg-dark p-3 rounded">
+                        <h5>{{ episode_name }}</h5>
+                        <p class="text-muted">{{ episode_data.title[:50] }}{% if episode_data.title|length > 50 %}...{% endif %}</p>
+                        {% if episode_data.players %}
+                        <div class="mt-3">
+                            {% for player_name, player_link in episode_data.players.items() %}
+                            <a href="{{ player_url(player_link) }}" class="btn btn-sm btn-danger me-1 mb-1" target="_blank">
+                                {{ player_name[:4] }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No players available</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Search - WAHYUDINFLIX2{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0"><i class="bi bi-search"></i> Search Movies & TV Shows</h3>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('search') }}" method="get">
+                    <div class="mb-3">
+                        <label for="query" class="form-label">Search Term</label>
+                        <input type="text" class="form-control" id="query" name="q" placeholder="Enter movie or series title..." required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="media_type" class="form-label">Media Type</label>
+                        <select class="form-select" id="media_type" name="type">
+                            <option value="all" selected>All</option>
+                            <option value="film">Movies</option>
+                            <option value="series">TV Shows</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h4>Tips for Better Search</h4>
+    <ul>
+        <li>Enter partial titles or full titles</li>
+        <li>Try different spellings if results don't appear</li>
+        <li>Use specific keywords for better results</li>
+    </ul>
+</div>
+{% endblock %}

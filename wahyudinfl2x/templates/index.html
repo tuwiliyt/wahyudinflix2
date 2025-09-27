@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>WAHYUDINFLIX2</h1>
+        <p>Watch the latest movies and TV series for free. Endless entertainment at your fingertips.</p>
+        <form class="mt-4" action="{{ url_for('search') }}" method="get">
+            <div class="input-group" style="max-width: 500px;">
+                <input type="text" class="form-control form-control-lg" name="q" placeholder="Search for movies, series..." required>
+                <button class="btn btn-danger btn-lg" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="content-row">
+    <h2>Latest Movies</h2>
+    <div class="row-posters">
+        {% for film in latest_films %}
+        <div class="poster-card">
+            {% if film.thumbnail %}
+                <img src="{{ film.thumbnail }}" class="poster-img" alt="{{ film.title }}">
+            {% else %}
+                <div class="bg-dark" style="width: 200px; height: 280px; display: flex; align-items: center; justify-content: center;">
+                    <span class="text-white">No Image</span>
+                </div>
+            {% endif %}
+            <div class="poster-overlay">
+                <h6 class="mb-0">{{ film.title[:30] }}{% if film.title|length > 30 %}...{% endif %}</h6>
+                <a href="{{ url_for('film_detail', film_url=film.url.split('/')[-1]) }}" class="btn btn-sm btn-danger mt-2">Watch</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="content-row">
+    <h2>Top TV Series</h2>
+    <div class="row-posters">
+        {% for series in top_series %}
+        <div class="poster-card">
+            {% if series.thumbnail %}
+                <img src="{{ series.thumbnail }}" class="poster-img" alt="{{ series.title }}">
+            {% else %}
+                <div class="bg-dark" style="width: 200px; height: 280px; display: flex; align-items: center; justify-content: center;">
+                    <span class="text-white">No Image</span>
+                </div>
+            {% endif %}
+            <div class="poster-overlay">
+                <h6 class="mb-0">{{ series.title[:30] }}{% if series.title|length > 30 %}...{% endif %}</h6>
+                <a href="{{ url_for('series_detail', series_url=series.url.split('/')[-1]) }}" class="btn btn-sm btn-danger mt-2">Watch</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

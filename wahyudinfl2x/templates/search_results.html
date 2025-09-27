@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - WAHYUDINFLIX2{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Search Results for "{{ query }}"</h1>
+        <div>
+            <a href="{{ url_for('search') }}" class="btn btn-danger">New Search</a>
+        </div>
+    </div>
+
+    {% if results %}
+        <div class="row-posters">
+            {% for result in results %}
+            <div class="poster-card">
+                {% if result.thumbnail %}
+                    <img src="{{ result.thumbnail }}" class="poster-img" alt="{{ result.title }}">
+                {% else %}
+                    <div class="bg-dark" style="width: 200px; height: 280px; display: flex; align-items: center; justify-content: center;">
+                        <span class="text-white">No Image</span>
+                    </div>
+                {% endif %}
+                <div class="poster-overlay">
+                    <h6 class="mb-0">{{ result.title[:30] }}{% if result.title|length > 30 %}...{% endif %}</h6>
+                    <p><small>{{ result.type|title }}</small></p>
+                    {% if result.type == 'film' %}
+                        <a href="{{ url_for('film_detail', film_url=result.url.split('/')[-1]) }}" class="btn btn-sm btn-danger mt-1">View Movie</a>
+                    {% else %}
+                        <a href="{{ url_for('series_detail', series_url=result.url.split('/')[-1]) }}" class="btn btn-sm btn-danger mt-1">View Series</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-dark text-center" role="alert" style="background-color: #181818; border: 1px solid #333;">
+            <h4 class="alert-heading">No results found</h4>
+            <p>Try searching for something else.</p>
+            <a href="{{ url_for('search') }}" class="btn btn-danger">Try Another Search</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
