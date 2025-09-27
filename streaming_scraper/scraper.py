@@ -17,6 +17,9 @@ class StreamingScraper:
         try:
             # Rotate user agent before making request
             self.rotate_user_agent()
+            # Add delay to mimic human behavior and avoid rate limiting
+            import time
+            time.sleep(1)  # 1 second delay between requests
             # Add timeout and retry logic for external requests
             response = self.session.get(film_url, timeout=15)
             
@@ -24,6 +27,8 @@ class StreamingScraper:
             if '404.html' in response.url or response.status_code == 404:
                 # Try with a new session and different user agent
                 self.set_new_session()
+                # Add delay again
+                time.sleep(2)  # Slightly longer delay for retry
                 response = self.session.get(film_url, timeout=15)
             
             response.raise_for_status()
@@ -75,6 +80,9 @@ class StreamingScraper:
         try:
             # Rotate user agent before making request
             self.rotate_user_agent()
+            # Add delay to mimic human behavior and avoid rate limiting
+            import time
+            time.sleep(1)  # 1 second delay between requests
             # Add timeout and retry logic for external requests
             response = self.session.get(series_url, timeout=15)
             
@@ -82,6 +90,8 @@ class StreamingScraper:
             if '404.html' in response.url or response.status_code == 404:
                 # Try with a new session and different user agent
                 self.set_new_session()
+                # Add delay again
+                time.sleep(2)  # Slightly longer delay for retry
                 response = self.session.get(series_url, timeout=15)
             
             response.raise_for_status()
@@ -223,6 +233,9 @@ class StreamingScraper:
         try:
             # Rotate user agent before making request
             self.rotate_user_agent()
+            # Add delay to mimic human behavior and avoid rate limiting
+            import time
+            time.sleep(1)  # 1 second delay between requests
             # Add timeout and retry logic for external requests
             response = self.session.get(episode_url, timeout=15)
             
@@ -230,6 +243,8 @@ class StreamingScraper:
             if '404.html' in response.url or response.status_code == 404:
                 # Try with a new session and different user agent
                 self.set_new_session()
+                # Add delay again
+                time.sleep(2)  # Slightly longer delay for retry
                 response = self.session.get(episode_url, timeout=15)
             
             response.raise_for_status()
@@ -305,6 +320,9 @@ class StreamingScraper:
             film_url = f'https://tv12.lk21official.life/latest/page/{page}'
             # Rotate user agent before making request
             self.rotate_user_agent()
+            # Add delay to mimic human behavior and avoid rate limiting
+            import time
+            time.sleep(1)  # 1 second delay between requests
             # Add timeout and retry logic for external requests
             response = self.session.get(film_url, timeout=15)
             
@@ -312,6 +330,8 @@ class StreamingScraper:
             if '404.html' in response.url or response.status_code == 404:
                 # Try with a new session and different user agent
                 self.set_new_session()
+                # Add delay again
+                time.sleep(2)  # Slightly longer delay for retry
                 response = self.session.get(film_url, timeout=15)
             
             response.raise_for_status()
@@ -457,6 +477,9 @@ class StreamingScraper:
             series_url = 'https://tv1.nontondrama.my/top-series-today'
             # Rotate user agent before making request
             self.rotate_user_agent()
+            # Add delay to mimic human behavior and avoid rate limiting
+            import time
+            time.sleep(1)  # 1 second delay between requests
             # Add timeout and retry logic for external requests
             response = self.session.get(series_url, timeout=15)
             
@@ -464,6 +487,8 @@ class StreamingScraper:
             if '404.html' in response.url or response.status_code == 404:
                 # Try with a new session and different user agent
                 self.set_new_session()
+                # Add delay again
+                time.sleep(2)  # Slightly longer delay for retry
                 response = self.session.get(series_url, timeout=15)
             
             response.raise_for_status()
@@ -538,6 +563,9 @@ class StreamingScraper:
             try:
                 # Rotate user agent before making request
                 self.rotate_user_agent()
+                # Add delay to mimic human behavior and avoid rate limiting
+                import time
+                time.sleep(1)  # 1 second delay between requests
                 # Add timeout for external requests
                 genre_response = self.session.get('https://tv12.lk21official.life/latest/page/1', timeout=15)
                 
@@ -545,6 +573,8 @@ class StreamingScraper:
                 if '404.html' in genre_response.url or genre_response.status_code == 404:
                     # Try with a new session and different user agent
                     self.set_new_session()
+                    # Add delay again
+                    time.sleep(2)  # Slightly longer delay for retry
                     genre_response = self.session.get('https://tv12.lk21official.life/latest/page/1', timeout=15)
                 
                 genre_soup = BeautifulSoup(genre_response.content, 'html.parser')
@@ -566,6 +596,9 @@ class StreamingScraper:
                         try:
                             # Rotate user agent before making request
                             self.rotate_user_agent()
+                            # Add delay to mimic human behavior and avoid rate limiting
+                            import time
+                            time.sleep(1)  # 1 second delay between requests
                             # Add timeout for external requests
                             genre_response = self.session.get(genre_url, timeout=15)
                             
@@ -573,6 +606,8 @@ class StreamingScraper:
                             if '404.html' in genre_response.url or genre_response.status_code == 404:
                                 # Try with a new session and different user agent
                                 self.set_new_session()
+                                # Add delay again
+                                time.sleep(2)  # Slightly longer delay for retry
                                 genre_response = self.session.get(genre_url, timeout=15)
                             
                             if genre_response.status_code != 200:
