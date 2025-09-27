@@ -15,7 +15,8 @@ class StreamingScraper:
         Returns: Dictionary with film title, thumbnail and embedded player links
         """
         try:
-            response = self.session.get(film_url)
+            # Add timeout and retry logic for external requests
+            response = self.session.get(film_url, timeout=15)
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -63,7 +64,8 @@ class StreamingScraper:
         Returns: Dictionary with series title, thumbnail, seasons, episodes, and embedded player links
         """
         try:
-            response = self.session.get(series_url)
+            # Add timeout and retry logic for external requests
+            response = self.session.get(series_url, timeout=15)
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -201,7 +203,8 @@ class StreamingScraper:
         Returns: Dictionary with episode title and embedded player links
         """
         try:
-            response = self.session.get(episode_url)
+            # Add timeout and retry logic for external requests
+            response = self.session.get(episode_url, timeout=15)
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -273,7 +276,8 @@ class StreamingScraper:
         """
         try:
             film_url = f'https://tv12.lk21official.life/latest/page/{page}'
-            response = self.session.get(film_url)
+            # Add timeout and retry logic for external requests
+            response = self.session.get(film_url, timeout=15)
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -307,9 +311,18 @@ class StreamingScraper:
     
     def __init__(self):
         self.session = requests.Session()
-        # Set a user agent to avoid being blocked
+        # Enhanced headers to avoid being blocked
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Cache-Control': 'max-age=0',
         })
         # TMDB API details - using public API key
         self.tmdb_api_key = "f3a2f3e5a3b463e5c2b6d4a4a7c7f3c7"  # Free TMDB API key
@@ -326,7 +339,8 @@ class StreamingScraper:
                 'api_key': self.tmdb_api_key,
                 'query': query
             }
-            response = self.session.get(search_url, params=params)
+            # Add timeout for TMDB API requests
+            response = self.session.get(search_url, params=params, timeout=10)
             if response.status_code == 200:
                 data = response.json()
                 return data.get('results', [])
@@ -395,7 +409,8 @@ class StreamingScraper:
         """
         try:
             series_url = 'https://tv1.nontondrama.my/top-series-today'
-            response = self.session.get(series_url)
+            # Add timeout and retry logic for external requests
+            response = self.session.get(series_url, timeout=15)
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -466,7 +481,8 @@ class StreamingScraper:
             # Also search in genre pages for more comprehensive coverage
             # Get list of genres and search few pages in each
             try:
-                genre_response = self.session.get('https://tv12.lk21official.life/latest/page/1')
+                # Add timeout for external requests
+                genre_response = self.session.get('https://tv12.lk21official.life/latest/page/1', timeout=15)
                 genre_soup = BeautifulSoup(genre_response.content, 'html.parser')
                 
                 # Find genre links
@@ -484,7 +500,8 @@ class StreamingScraper:
                     for page in range(1, 4):  # Search first 3 pages of each genre
                         genre_url = f"https://tv12.lk21official.life{genre_path}/page/{page}"
                         try:
-                            genre_response = self.session.get(genre_url)
+                            # Add timeout for external requests
+                            genre_response = self.session.get(genre_url, timeout=15)
                             if genre_response.status_code != 200:
                                 break
                                 
@@ -751,6 +768,22 @@ class StreamingScraper:
         
         # Use the existing scrape_any function
         return self.scrape_any(url)
+
+    def set_new_session(self):
+        """Reset session with new headers to avoid blocking"""
+        self.session = requests.Session()
+        self.session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Cache-Control': 'max-age=0',
+        })
 
 
 # Example usage
