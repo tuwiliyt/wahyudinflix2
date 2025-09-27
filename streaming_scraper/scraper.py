@@ -24,7 +24,7 @@ class StreamingScraper:
             response = self.session.get(film_url, timeout=15)
             
             # Check if we got redirected to a 404 or error page
-            if '404.html' in response.url or response.status_code == 404:
+            if '404.html' in response.url or '404' in response.text or response.status_code == 404:
                 # Try with a new session and different user agent
                 self.set_new_session()
                 # Add delay again
@@ -87,7 +87,7 @@ class StreamingScraper:
             response = self.session.get(series_url, timeout=15)
             
             # Check if we got redirected to a 404 or error page
-            if '404.html' in response.url or response.status_code == 404:
+            if '404.html' in response.url or '404' in response.text or response.status_code == 404:
                 # Try with a new session and different user agent
                 self.set_new_session()
                 # Add delay again
@@ -240,7 +240,7 @@ class StreamingScraper:
             response = self.session.get(episode_url, timeout=15)
             
             # Check if we got redirected to a 404 or error page
-            if '404.html' in response.url or response.status_code == 404:
+            if '404.html' in response.url or '404' in response.text or response.status_code == 404:
                 # Try with a new session and different user agent
                 self.set_new_session()
                 # Add delay again
@@ -484,7 +484,7 @@ class StreamingScraper:
             response = self.session.get(series_url, timeout=15)
             
             # Check if we got redirected to a 404 or error page
-            if '404.html' in response.url or response.status_code == 404:
+            if '404.html' in response.url or '404' in response.text or response.status_code == 404:
                 # Try with a new session and different user agent
                 self.set_new_session()
                 # Add delay again
@@ -887,8 +887,13 @@ class StreamingScraper:
 
     def set_new_session(self):
         """Reset session with new headers to avoid blocking"""
-        self.session = requests.Session()
         import random
+        import http.cookiejar as cookiejar
+        
+        # Create a new session with cookie jar to maintain session state
+        self.session = requests.Session()
+        self.session.cookies = cookiejar.LWPCookieJar()
+        
         user_agent = random.choice(self.user_agents)
         self.session.headers.update({
             'User-Agent': user_agent,
@@ -901,6 +906,8 @@ class StreamingScraper:
             'Sec-Fetch-Mode': 'navigate',
             'Sec-Fetch-Site': 'none',
             'Cache-Control': 'max-age=0',
+            'DNT': '1',  # Do Not Track
+            'Referer': 'https://www.google.com/',  # Referer to appear more natural
         })
 
 
