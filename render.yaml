@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: wahyudinflix2
+    env: python
+    plan: free
+    pythonVersion: '3.12'
+    envVars:
+      - key: PYTHONPATH
+        value: .
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn wahyudinfl2x.app:app"
