@@ -3,7 +3,6 @@ services:
     name: wahyudinflix2
     env: python
     plan: free
-    pythonVersion: '3.11'
     envVars:
       - key: PYTHONPATH
         value: .
