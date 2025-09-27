@@ -17,6 +17,15 @@ def after_request(response):
     response.headers["X-XSS-Protection"] = "1; mode=block"
     return response
 
+# Add security headers to avoid potential issues with deployment platforms
+@app.after_request
+def after_request(response):
+    # Remove any potentially problematic security headers
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    return response
+
 # Add a custom function to generate player URLs safely
 @app.template_global()
 def player_url(url):
