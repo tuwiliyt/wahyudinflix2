@@ -15,8 +15,17 @@ class StreamingScraper:
         Returns: Dictionary with film title, thumbnail and embedded player links
         """
         try:
+            # Rotate user agent before making request
+            self.rotate_user_agent()
             # Add timeout and retry logic for external requests
             response = self.session.get(film_url, timeout=15)
+            
+            # Check if we got redirected to a 404 or error page
+            if '404.html' in response.url or response.status_code == 404:
+                # Try with a new session and different user agent
+                self.set_new_session()
+                response = self.session.get(film_url, timeout=15)
+            
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -64,8 +73,17 @@ class StreamingScraper:
         Returns: Dictionary with series title, thumbnail, seasons, episodes, and embedded player links
         """
         try:
+            # Rotate user agent before making request
+            self.rotate_user_agent()
             # Add timeout and retry logic for external requests
             response = self.session.get(series_url, timeout=15)
+            
+            # Check if we got redirected to a 404 or error page
+            if '404.html' in response.url or response.status_code == 404:
+                # Try with a new session and different user agent
+                self.set_new_session()
+                response = self.session.get(series_url, timeout=15)
+            
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -203,8 +221,17 @@ class StreamingScraper:
         Returns: Dictionary with episode title and embedded player links
         """
         try:
+            # Rotate user agent before making request
+            self.rotate_user_agent()
             # Add timeout and retry logic for external requests
             response = self.session.get(episode_url, timeout=15)
+            
+            # Check if we got redirected to a 404 or error page
+            if '404.html' in response.url or response.status_code == 404:
+                # Try with a new session and different user agent
+                self.set_new_session()
+                response = self.session.get(episode_url, timeout=15)
+            
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -276,8 +303,17 @@ class StreamingScraper:
         """
         try:
             film_url = f'https://tv12.lk21official.life/latest/page/{page}'
+            # Rotate user agent before making request
+            self.rotate_user_agent()
             # Add timeout and retry logic for external requests
             response = self.session.get(film_url, timeout=15)
+            
+            # Check if we got redirected to a 404 or error page
+            if '404.html' in response.url or response.status_code == 404:
+                # Try with a new session and different user agent
+                self.set_new_session()
+                response = self.session.get(film_url, timeout=15)
+            
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -324,6 +360,14 @@ class StreamingScraper:
             'Sec-Fetch-Site': 'none',
             'Cache-Control': 'max-age=0',
         })
+        # List of potential user agents to rotate
+        self.user_agents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:130.0) Gecko/20100101 Firefox/130.0',
+        ]
         # TMDB API details - using public API key
         self.tmdb_api_key = "f3a2f3e5a3b463e5c2b6d4a4a7c7f3c7"  # Free TMDB API key
         self.tmdb_base_url = "https://api.themoviedb.org/3"
@@ -334,6 +378,8 @@ class StreamingScraper:
         Search for content on TMDB
         """
         try:
+            # Rotate user agent before making request (for consistency)
+            self.rotate_user_agent()
             search_url = f"{self.tmdb_base_url}/search/{media_type}"
             params = {
                 'api_key': self.tmdb_api_key,
@@ -409,8 +455,17 @@ class StreamingScraper:
         """
         try:
             series_url = 'https://tv1.nontondrama.my/top-series-today'
+            # Rotate user agent before making request
+            self.rotate_user_agent()
             # Add timeout and retry logic for external requests
             response = self.session.get(series_url, timeout=15)
+            
+            # Check if we got redirected to a 404 or error page
+            if '404.html' in response.url or response.status_code == 404:
+                # Try with a new session and different user agent
+                self.set_new_session()
+                response = self.session.get(series_url, timeout=15)
+            
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -481,8 +536,17 @@ class StreamingScraper:
             # Also search in genre pages for more comprehensive coverage
             # Get list of genres and search few pages in each
             try:
+                # Rotate user agent before making request
+                self.rotate_user_agent()
                 # Add timeout for external requests
                 genre_response = self.session.get('https://tv12.lk21official.life/latest/page/1', timeout=15)
+                
+                # Check if we got redirected to a 404 or error page
+                if '404.html' in genre_response.url or genre_response.status_code == 404:
+                    # Try with a new session and different user agent
+                    self.set_new_session()
+                    genre_response = self.session.get('https://tv12.lk21official.life/latest/page/1', timeout=15)
+                
                 genre_soup = BeautifulSoup(genre_response.content, 'html.parser')
                 
                 # Find genre links
@@ -500,8 +564,17 @@ class StreamingScraper:
                     for page in range(1, 4):  # Search first 3 pages of each genre
                         genre_url = f"https://tv12.lk21official.life{genre_path}/page/{page}"
                         try:
+                            # Rotate user agent before making request
+                            self.rotate_user_agent()
                             # Add timeout for external requests
                             genre_response = self.session.get(genre_url, timeout=15)
+                            
+                            # Check if we got redirected to a 404 or error page
+                            if '404.html' in genre_response.url or genre_response.status_code == 404:
+                                # Try with a new session and different user agent
+                                self.set_new_session()
+                                genre_response = self.session.get(genre_url, timeout=15)
+                            
                             if genre_response.status_code != 200:
                                 break
                                 
@@ -769,11 +842,21 @@ class StreamingScraper:
         # Use the existing scrape_any function
         return self.scrape_any(url)
 
+    def rotate_user_agent(self):
+        """Rotate the User-Agent to avoid detection"""
+        import random
+        user_agent = random.choice(self.user_agents)
+        self.session.headers.update({
+            'User-Agent': user_agent
+        })
+
     def set_new_session(self):
         """Reset session with new headers to avoid blocking"""
         self.session = requests.Session()
+        import random
+        user_agent = random.choice(self.user_agents)
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+            'User-Agent': user_agent,
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.9',
             'Accept-Encoding': 'gzip, deflate, br',
